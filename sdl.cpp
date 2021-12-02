@@ -1,5 +1,3 @@
-/*This source code copyrighted by Lazy Foo' Productions (2004-2020)
-and may not be redistributed without written permission.*/
 #include "sdl.hpp"
 
 //Using SDL and standard IO
@@ -9,85 +7,86 @@ and may not be redistributed without written permission.*/
 //Screen dimension constants
 const int SCREEN_WIDTH = 1080;
 const int SCREEN_HEIGHT = 480;
+//Game refresh rate
+const int FPS = 60;
 
 //The window we'll be rendering to
-SDL_Window* gWindow = NULL;
+SDL_Window* window = NULL;
 	
 //The surface contained by the window
-SDL_Surface* gScreenSurface = NULL;
+SDL_Surface* screen_surface = NULL;
 
 //The image we will load and show on the screen
-SDL_Surface* gHelloWorld = NULL;
+SDL_Surface* tmp_surface = NULL;
 
-bool init() {
-	//Initialization flag
-	bool success = true;
+//Event handler
+SDL_Event event;
 
-	//Initialize SDL
-	if(SDL_Init(SDL_INIT_VIDEO) < 0) {
-		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
-		success = false;
-	} else {
-		//Create window
-		gWindow = SDL_CreateWindow("Mancala", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-		if( gWindow == NULL ) {
-			printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
-			success = false;
-		} else {
-		//Get window surface
-			gScreenSurface = SDL_GetWindowSurface(gWindow);
-		}
-	}
-	return success;
-}
+//Game loop flag
+bool running = true;
 
-bool loadMedia() {
-	//Loading success flag
-	bool success = true;
-
-	//Load splash image
-	gHelloWorld = SDL_LoadBMP("mancala.bmp");
-	if( gHelloWorld == NULL ) {
-		printf("Unable to load image %s! SDL Error: %s\n", "mancala_board.bmp", SDL_GetError());
-		success = false;
-	}
-	return success;
-}
-
-void close() {
-	//Deallocate surface
-	SDL_FreeSurface(gHelloWorld);
-	gHelloWorld = NULL;
-
-	//Destroy window
-	SDL_DestroyWindow(gWindow);
-	gWindow = NULL;
-
-	//Quit SDL subsystems
-	SDL_Quit();
-}
+//Framerate-limiter
+Uint32 starting_tick = 0;
 
 int main( int argc, char* args[] ) {
 	//Start up SDL and create window
-	if(!init()) {
-		printf("Failed to initialize!\n");
-	} else {
-		//Load media
-		if( !loadMedia() ) {
-			printf("Failed to load media!\n");
-		} else {
-			//Apply the image
-			SDL_BlitSurface(gHelloWorld, NULL, gScreenSurface, NULL);
-			
-			//Update the surface
-			SDL_UpdateWindowSurface(gWindow);
+	if ( SDL_Init(SDL_INIT_VIDEO) != 0 ) printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
 
-			//Wait five seconds
-			SDL_Delay(5000);
+	//Create window
+	window = SDL_CreateWindow("Mancala",
+								SDL_WINDOWPOS_UNDEFINED,
+								SDL_WINDOWPOS_UNDEFINED,
+								SCREEN_WIDTH,
+								SCREEN_HEIGHT,
+								0);
+	if( window == NULL ) {
+		printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+	}
+
+	//Get window surface
+	screen_surface = SDL_GetWindowSurface(window);
+	if ( screen_surface == NULL ) printf("Unable to obtain screen_surface: %s\n", SDL_GetError());
+
+	//Load splash image
+	tmp_surface = SDL_LoadBMP("mancala.bmp");
+	if( tmp_surface == NULL ) printf("Unable to load image %s! SDL Error: %s\n", "mancala_board.bmp", SDL_GetError());
+
+	while ( running ) {
+		//Runtime used to limit framerate
+		starting_tick = SDL_GetTicks();
+
+		//Apply the image
+		SDL_BlitSurface(tmp_surface, NULL, screen_surface, NULL);
+	
+		//Update the surface
+		SDL_UpdateWindowSurface(window);
+
+		while ( SDL_PollEvent(&event) ) {
+			//Event handler
+			switch ( event.type ) {
+				case SDL_QUIT:
+					running = false;
+					break;
+			}
+			
+			//Framerate limiter
+			if ( (1000 / FPS) > SDL_GetTicks() - starting_tick ) {
+				SDL_Delay(1000 / FPS - (SDL_GetTicks() - starting_tick));
+			}
 		}
 	}
 
-	//Free resources and close SDL
-	close();
+	//Deallocate surface
+	SDL_FreeSurface(tmp_surface);
+	SDL_FreeSurface(screen_surface);
+	tmp_surface = NULL;
+	screen_surface = NULL;
+
+	//Destroy window
+	SDL_DestroyWindow(window);
+	window = NULL;
+
+	//Quit SDL subsystems
+	SDL_Quit();
 	return 0;
 }
