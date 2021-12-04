@@ -1,12 +1,13 @@
 #include "render_window.hpp"
+#include "entity.hpp"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
 
 //Screen dimension constants
-const int SCREEN_WIDTH = 1080;
-const int SCREEN_HEIGHT = 540;
+const int SCREEN_WIDTH = 1280;
+const int SCREEN_HEIGHT = 720;
 //Game refresh rate
 const int FPS = 60;
 
@@ -30,6 +31,8 @@ int main( int argc, char* args[] ) {
 
 	SDL_Texture* grass_texture = render_window.LoadTexture("res/grass.png");
 
+	Entity platform(50, 100, grass_texture);
+
 	while ( running ) {
 		starting_tick = SDL_GetTicks();
 
@@ -40,14 +43,14 @@ int main( int argc, char* args[] ) {
 				break;
 			}
 		}
-		//Framerate limiter
+		// Framerate limiter
 		if ( (1000 / FPS) > SDL_GetTicks() - starting_tick ) {
 			SDL_Delay(1000 / FPS - (SDL_GetTicks() - starting_tick));
 		}
 
-		// render_window.Clear();
-		// render_window.Render(grass_texture);
-		// render_window.Display();
+		render_window.Clear();
+		render_window.Render(platform);
+		render_window.Display();
 	}
 
 	SDL_DestroyTexture(grass_texture);

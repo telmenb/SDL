@@ -1,9 +1,10 @@
 #ifndef RENDERWINDOW_HPP
 #define RENDERWINDOW_HPP
 
+#include "entity.hpp"
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <string>
 
 class RenderWindow {
 public:
@@ -11,11 +12,11 @@ public:
 	SDL_Texture* LoadTexture(const char* file_path);
 	void CleanUp();
 	void Clear();
-	void Render(SDL_Texture* texture);
+	void Render(Entity& entity);
 	void Display();
 private:
-	SDL_Window* window;
-	SDL_Renderer* renderer;
+	SDL_Window* window_;
+	SDL_Renderer* renderer_;
 };
 
 #endif
