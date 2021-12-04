@@ -41,10 +41,10 @@ void RenderWindow::Render(Entity& entity) {
 	src.h = entity.GetFrame().h;
 
 	SDL_Rect dst;
-	dst.x = entity.GetX() * 4;
-	dst.y = entity.GetY() * 4;
-	dst.w = entity.GetFrame().w * 4;
-	dst.h = entity.GetFrame().h * 4;
+	dst.x = entity.GetX();
+	dst.y = entity.GetY();
+	dst.w = entity.GetFrame().w;
+	dst.h = entity.GetFrame().h;
 
 	if ( SDL_RenderCopy(renderer_, entity.GetTexture(), &src, &dst) != 0 )
 		std::cout << "Error copying texture: " << SDL_GetError() << std::endl; 

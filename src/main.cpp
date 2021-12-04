@@ -4,10 +4,11 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
+#include <vector>
 
 //Screen dimension constants
-const int SCREEN_WIDTH = 1280;
-const int SCREEN_HEIGHT = 720;
+const int SCREEN_WIDTH = 1700;
+const int SCREEN_HEIGHT = 380;
 //Game refresh rate
 const int FPS = 60;
 
@@ -29,9 +30,15 @@ int main( int argc, char* args[] ) {
 
 	RenderWindow render_window("Mancala", SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	SDL_Texture* grass_texture = render_window.LoadTexture("res/grass.png");
+	SDL_Texture* board_texture = render_window.LoadTexture("res/board_reduced.png");
 
-	Entity platform(50, 100, grass_texture);
+	Entity board(0, 0, board_texture);
+
+	// std::vector<Entity> entities;
+
+	// for (int i = 0; i < SCREEN_WIDTH / 64; i++) {
+	// 	entities.push_back(Entity(i * 32, 288, grass_texture));
+	// }
 
 	while ( running ) {
 		starting_tick = SDL_GetTicks();
@@ -49,11 +56,17 @@ int main( int argc, char* args[] ) {
 		}
 
 		render_window.Clear();
-		render_window.Render(platform);
+
+		// for (Entity& entity : entities) {
+		// 	render_window.Render(entity);
+		// }
+
+		render_window.Render(board);
+
 		render_window.Display();
 	}
 
-	SDL_DestroyTexture(grass_texture);
+	SDL_DestroyTexture(board_texture);
 	render_window.CleanUp();
 	SDL_Quit();
 	return 0;
