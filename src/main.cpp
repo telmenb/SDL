@@ -21,24 +21,26 @@ bool running = true;
 //Framerate-limiter
 Uint32 starting_tick = 0;
 
-int main( int argc, char* args[] ) {
+void Init() {
 	if ( SDL_Init(SDL_INIT_VIDEO) != 0 ) 
 		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
 
 	if ( !IMG_Init(IMG_INIT_PNG) )
 		printf("SDL_Image could not be initialized! SDL_Error: %s\n", SDL_GetError());
+}
+
+int main( int argc, char* args[] ) {
+	Init();
 
 	RenderWindow render_window("Mancala", SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	SDL_Texture* board_texture = render_window.LoadTexture("res/board_reduced.png");
 
-	Entity board(0, 0, board_texture);
+	Entity board(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, board_texture);
 
-	// std::vector<Entity> entities;
+	SDL_Texture* stone_texture = render_window.LoadTexture("res/one_stone.png");
 
-	// for (int i = 0; i < SCREEN_WIDTH / 64; i++) {
-	// 	entities.push_back(Entity(i * 32, 288, grass_texture));
-	// }
+	Entity one_stone(1300, 24, 32 * 5, 32 * 5, stone_texture);
 
 	while ( running ) {
 		starting_tick = SDL_GetTicks();
@@ -62,11 +64,12 @@ int main( int argc, char* args[] ) {
 		// }
 
 		render_window.Render(board);
-
+		render_window.Render(one_stone);
 		render_window.Display();
 	}
 
 	SDL_DestroyTexture(board_texture);
+	SDL_DestroyTexture(stone_texture);
 	render_window.CleanUp();
 	SDL_Quit();
 	return 0;
