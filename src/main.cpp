@@ -38,9 +38,9 @@ int main( int argc, char* args[] ) {
 
 	Entity board(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, board_texture);
 
-	SDL_Texture* stone_texture = render_window.LoadTexture("res/one_stone.png");
+	SDL_Texture* stone_texture = render_window.LoadTexture("res/four_stone.png");
 
-	Entity one_stone(1300, 24, 32 * 5, 32 * 5, stone_texture);
+	Entity one_stone(1290, 24, 32 * 5, 32 * 5, stone_texture);
 
 	while ( running ) {
 		starting_tick = SDL_GetTicks();
@@ -58,10 +58,6 @@ int main( int argc, char* args[] ) {
 		}
 
 		render_window.Clear();
-
-		// for (Entity& entity : entities) {
-		// 	render_window.Render(entity);
-		// }
 
 		render_window.Render(board);
 		render_window.Render(one_stone);
