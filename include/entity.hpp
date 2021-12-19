@@ -6,7 +6,9 @@
 
 class Entity {
 public:
-    Entity(float p_x, float p_y, float p_w, float p_h, SDL_Texture* texture);
+    Entity() = default;
+    Entity(float p_x, float p_y, float r_x, float r_y, SDL_Texture* texture);
+    Entity(float p_x, float p_y, float p_w, float p_h, float r_x, float r_y, SDL_Texture* texture);
     float GetX() { return x; }
     float GetY() { return y; }
     SDL_Texture* GetTexture() { return texture_; }
