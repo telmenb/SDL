@@ -1,14 +1,12 @@
 #include "render_window.hpp"
 #include "entity.hpp"
+#include "board.hpp"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
 #include <vector>
 
-//Screen dimension constants
-const int SCREEN_WIDTH = 1700;
-const int SCREEN_HEIGHT = 380;
 //Game refresh rate
 const int FPS = 60;
 
@@ -30,25 +28,10 @@ void Init() {
 }
 
 int main( int argc, char* args[] ) {
+	Board board;
+
 	Init();
-
 	RenderWindow render_window("Mancala", SCREEN_WIDTH, SCREEN_HEIGHT);
-
-	SDL_Texture* board_texture = render_window.LoadTexture("res/board.png");
-
-	Entity board(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, board_texture); //special constructor
-
-	SDL_Texture* stone_sprite = render_window.LoadTexture("res/stone_sprite.png");
-
-	std::vector<Entity> entities;
-
-	//TODO:
-	//Move initialization and changing of entites to render_window
-	//Possibly handle by passing in board array by reference
-	for (size_t i = 0; i < 6; i++) {
-		entities.push_back(Entity(245 + (i * 210), 20, 160 * 3, 0, stone_sprite));
-		entities.push_back(Entity(245 + (i * 210), 200, 160 * 3, 0, stone_sprite));
-	}
 
 	while ( running ) {
 		starting_tick = SDL_GetTicks();
@@ -66,16 +49,10 @@ int main( int argc, char* args[] ) {
 		}
 
 		render_window.Clear();
-
-		render_window.Render(board);
-		for (size_t i = 0; i < entities.size(); i++) {
-			render_window.Render(entities.at(i));
-		}
+		render_window.RenderEntities(board);
 		render_window.Display();
 	}
 
-	SDL_DestroyTexture(board_texture);
-	SDL_DestroyTexture(stone_sprite);
 	render_window.CleanUp();
 	SDL_Quit();
 	return 0;

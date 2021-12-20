@@ -1,12 +1,11 @@
 #ifndef BOARD_HPP
 #define BOARD_HPP
 
-#include "entity.hpp"
-
 #include <iostream>
 #include <vector>
+#include <stdexcept>
 
-enum class Player {kPlayer1, kPlayer2};
+enum class Player {kPlayer1, kPlayer2, kTie};
 
 class Board {
 public:
@@ -17,6 +16,8 @@ public:
     // throws exception if idx <= 0 || idx == 7 || idx > 13
     void StartMove(int start_idx);
 
+    int AtIDX(int idx);
+
     // loops through the board to check if the game has ended
     // everything except board_.at(0) and board_.at(7) == 0
     bool CheckForWinner();
@@ -26,7 +27,7 @@ public:
     Player DeclareWinner();
 
     // resets the board for another round of gameplay
-    void Restart();
+    void Reset();
 
     // output operator for local testing
     friend std::ostream& operator<<(std::ostream& os, const Board& board);
