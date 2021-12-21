@@ -1,8 +1,8 @@
-#include "render_window.hpp"
+#include "graphics.hpp"
 
 #include <iostream>
 
-RenderWindow::RenderWindow(const char* title, int width, int height) 
+Graphics::Graphics(const char* title, int width, int height) 
 								: window_(nullptr), renderer_(nullptr) {
 	window_ = SDL_CreateWindow(title,
 								SDL_WINDOWPOS_UNDEFINED,
@@ -16,12 +16,14 @@ RenderWindow::RenderWindow(const char* title, int width, int height)
 
 	renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
 
+	font_ = TTF_OpenFont("res/ARCADE_N.TTF", 72);
+
 	board_texture_ = LoadTexture("res/board.png");
 
 	stone_sprite_ = LoadTexture("res/stone_sprite.png");
 }
 
-SDL_Texture* RenderWindow::LoadTexture(const char* file_path) {
+SDL_Texture* Graphics::LoadTexture(const char* file_path) {
 	SDL_Texture* texture = nullptr;
 	texture = IMG_LoadTexture(renderer_, file_path);
 
@@ -31,21 +33,21 @@ SDL_Texture* RenderWindow::LoadTexture(const char* file_path) {
 	return texture;
 }
 
-void RenderWindow::Clear() {
+void Graphics::Clear() {
 	if ( SDL_RenderClear(renderer_) != 0 )
 		std::cout << "Error clearing render: " << SDL_GetError() << std::endl; 
 }
 
-void RenderWindow::RenderEntities(Board& board) {
+void Graphics::RenderEntities(Board& board) {
 	ClearEntities();
 
-	entities_.push_back(Entity(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, board_texture_)); //special constructor
+	entities_.push_back(Entity(0, (SCREEN_HEIGHT - BOARD_HEIGHT) / 2, 0, 0, BOARD_WIDTH, BOARD_HEIGHT, board_texture_));
 
 	for (int i = 0; i < 13; i++) {
 		if (i == 6 || i == 13) continue;
-		std::pair<float, float> dst = SetDst(i);
-		std::pair<float, float> src = SetSrc(board.AtIDX(i));
-		entities_.push_back(Entity(dst.first, dst.second, src.first, src.second, stone_sprite_));
+		std::pair<float, float> dst = SetStoneDst(i);
+		std::pair<float, float> src = SetStoneSrc(board.AtIDX(i));
+		entities_.push_back(Entity(dst.first, dst.second, src.first, src.second, STONE_WIDTH, STONE_HEIGHT, stone_sprite_));
 	}
 
 	for (int i = 0; i < entities_.size(); i++) {
@@ -60,12 +62,39 @@ void RenderWindow::RenderEntities(Board& board) {
 	}
 }
 
-std::pair<float, float> RenderWindow::SetDst(int idx) {
+void Graphics::RenderScore(Board& board) {
+	SDL_Surface* surface = TTF_RenderText_Solid(font_, std::to_string(board.AtIDX(6)).c_str(), {255, 255, 255});
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer_, surface);
+	int w, h = 0;
+	SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+	SDL_Rect rect;
+	if (board.AtIDX(6) < 10) {
+		rect = {1570, 310, w, h};
+	} else {
+		rect = {1535, 310, w, h};
+	}
+	SDL_RenderCopy(renderer_, texture, NULL, &rect);
+
+	surface = TTF_RenderText_Solid(font_, std::to_string(board.AtIDX(13)).c_str(), {255, 255, 255});
+	texture = SDL_CreateTextureFromSurface(renderer_, surface);
+	SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+	if (board.AtIDX(13) < 10) {
+		rect = {60, 310, w, h};
+	} else {
+		rect = {25, 310, w, h};
+	}
+	SDL_RenderCopy(renderer_, texture, NULL, &rect);
+
+	SDL_FreeSurface(surface);
+	SDL_DestroyTexture(texture);
+}
+
+std::pair<float, float> Graphics::SetStoneDst(int idx) {
 	float x, y = 0;
 	if (idx < 6) {
-			y = 200;
+			y = 360;
 		} else {
-			y = 20;
+			y = 180;
 		}
 
 	switch (idx) {
@@ -97,7 +126,7 @@ std::pair<float, float> RenderWindow::SetDst(int idx) {
 	return std::make_pair(x, y);
 }
 
-std::pair<float, float> RenderWindow::SetSrc(int stones) {
+std::pair<float, float> Graphics::SetStoneSrc(int stones) {
 	float x, y = 0;
 	switch (stones) {
 		case 0:
@@ -147,7 +176,7 @@ std::pair<float, float> RenderWindow::SetSrc(int stones) {
 	return std::make_pair(x, y);
 }
 
-void RenderWindow::Render(Entity& entity) {
+void Graphics::Render(Entity& entity) {
 
 	SDL_Rect src = entity.GetFrame();
 
@@ -159,20 +188,22 @@ void RenderWindow::Render(Entity& entity) {
 		std::cout << "Error copying texture: " << SDL_GetError() << std::endl; 
 }
 
-void RenderWindow::ClearEntities() {
+void Graphics::ClearEntities() {
 	entities_.clear();
 }
 	
 
-void RenderWindow::Display() {
+void Graphics::Display() {
 	SDL_RenderPresent(renderer_);
 }
 
-RenderWindow::~RenderWindow() {
+Graphics::~Graphics() {
 	SDL_DestroyTexture(stone_sprite_);
 	SDL_DestroyTexture(board_texture_);
 	SDL_DestroyRenderer(renderer_);
 	SDL_DestroyWindow(window_);
+	TTF_CloseFont(font_);
+	font_ = nullptr;
 	renderer_ = nullptr;
 	window_ = nullptr;
 	stone_sprite_ = nullptr;

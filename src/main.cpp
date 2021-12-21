@@ -1,4 +1,4 @@
-#include "render_window.hpp"
+#include "graphics.hpp"
 #include "entity.hpp"
 #include "board.hpp"
 #include "mouse.hpp"
@@ -14,8 +14,6 @@ const int FPS = 60;
 
 //Event handler
 SDL_Event event;
-
-TTF_Font font;
 
 //Mouse object
 Mouse mouse;
@@ -33,7 +31,7 @@ void Init() {
 	if ( !IMG_Init(IMG_INIT_PNG) )
 		printf("SDL_Image could not be initialized! SDL_Error: %s\n", SDL_GetError());
 
-	if ( TTF_Init() != 0)
+	if ( TTF_Init() != 0 )
 		printf("SDL_ttf could not be initialized! SDL_Error: %s\n", SDL_GetError());
 }
 
@@ -42,7 +40,7 @@ int main( int argc, char* args[] ) {
 	std::cout << board << std::endl;
 
 	Init();
-	RenderWindow render_window("Mancala", SCREEN_WIDTH, SCREEN_HEIGHT);
+	Graphics render_window("Mancala", SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	while ( running ) {
 		starting_tick = SDL_GetTicks();
@@ -75,6 +73,7 @@ int main( int argc, char* args[] ) {
 
 		render_window.Clear();
 		render_window.RenderEntities(board);
+		render_window.RenderScore(board);
 		render_window.Display();
 	}
 	SDL_Quit();
