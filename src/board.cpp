@@ -4,18 +4,19 @@ Board::Board() {
     board_ = std::vector<int> (14, 4);
     board_.at(6) = 0;
     board_.at(13) = 0;
+    player_turn_ = Player::kPlayer1;
 }
 
-// void Board::StartMove(int start_idx) {
-//     if (start_idx < 0 || start_idx == 6 || start_idx > 12)
-//         throw std::runtime_error("Invaid index");
+void Board::StartMove(int start_idx) {
+    if (start_idx < 0 || start_idx == 6 || start_idx > 12)
+        throw std::runtime_error("Invaid index");
 
-//     if (player_turn_ == Player::kPlayer1) {
-//         MovePlayerOne(start_idx);
-//     } else {
-//         MovePlayerTwo(start_idx);
-//     }
-// }
+    if (player_turn_ == Player::kPlayer1) {
+        MovePlayerOne(start_idx);
+    } else {
+        MovePlayerTwo(start_idx);
+    }
+}
 
 int Board::AtIDX(int idx) {
     return board_.at(idx);
@@ -42,6 +43,65 @@ void Board::Reset() {
     board_ = std::vector<int> (14, 4);
     board_.at(6) = 0;
     board_.at(13) = 0;
+    player_turn_ = Player::kPlayer1;
+}
+
+void Board::MovePlayerOne(int start_idx) {
+    if (start_idx > 5 || start_idx < 0 || board_.at(start_idx) == 0)
+        throw std::runtime_error("Invalid index");
+    
+    int idx = start_idx;
+    int hand = board_.at(idx);
+    board_.at(idx) = 0;
+    idx++;
+    while (hand != 0) {
+        if (idx == 13) {
+            idx = 0;
+            continue;
+        }
+
+        hand--;
+        board_.at(idx)++;
+    
+        if (hand == 0 && idx != 6 && board_.at(idx) != 1) {
+            hand = board_.at(idx);
+            board_.at(idx) = 0;
+        }
+
+        idx++;
+    }
+
+    if (idx != 7) player_turn_ = Player::kPlayer2;
+}
+
+void Board::MovePlayerTwo(int start_idx) {
+    if (start_idx < 7 || start_idx > 12 || board_.at(start_idx) == 0)
+        throw std::runtime_error("Invalid index");
+    
+    int idx = start_idx;
+    int hand = board_.at(idx);
+    board_.at(idx) = 0;
+    idx++;
+    while (hand != 0) {
+        if (idx == 6) {
+            idx++;
+            continue;
+        }
+
+        hand--;
+        board_.at(idx)++;
+    
+        if (hand == 0 && idx != 13 && board_.at(idx) != 1) {
+            hand = board_.at(idx);
+            board_.at(idx) = 0;
+        }
+
+        idx++;
+
+        if (idx == 14) idx = 0;
+    }
+
+    if (idx != 0) player_turn_ = Player::kPlayer1;
 }
 
 std::ostream& operator<<(std::ostream& os, const Board& board) {

@@ -9,13 +9,14 @@ enum class Player {kPlayer1, kPlayer2, kTie};
 
 class Board {
 public:
-    // default constructor, sets board_[0] and board_[7] == 0; player_turn_ == kPlayer1
+    // default constructor, sets board_[6] and board_[13] == 0; player_turn_ == kPlayer1
     Board();
 
     // checks player_turn_ and calls the appropriate method
     // throws exception if idx <= 0 || idx == 7 || idx > 13
     void StartMove(int start_idx);
 
+    // returns board value at idx
     int AtIDX(int idx);
 
     // loops through the board to check if the game has ended

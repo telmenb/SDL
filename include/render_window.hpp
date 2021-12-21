@@ -15,8 +15,8 @@ const int SCREEN_HEIGHT = 380;
 class RenderWindow {
 public:
 	RenderWindow(const char* title, int width, int height);
+	~RenderWindow();
 	SDL_Texture* LoadTexture(const char* file_path);
-	void CleanUp();
 	void Clear();
 	void RenderEntities(Board& board);
 	void Render(Entity& entity);

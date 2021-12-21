@@ -165,7 +165,7 @@ void RenderWindow::Display() {
 	SDL_RenderPresent(renderer_);
 }
 
-void RenderWindow::CleanUp() {
+RenderWindow::~RenderWindow() {
 	SDL_DestroyTexture(stone_sprite_);
 	SDL_DestroyTexture(board_texture_);
 	SDL_DestroyRenderer(renderer_);

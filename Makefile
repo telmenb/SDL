@@ -1,5 +1,5 @@
 #OBJS specifies which files to compile as part of the project
-OBJS = src/render_window.cpp src/main.cpp src/entity.cpp src/board.cpp
+OBJS = src/*
 
 #CC specifies which compiler we're using
 CC = g++

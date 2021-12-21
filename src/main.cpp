@@ -42,18 +42,23 @@ int main( int argc, char* args[] ) {
 				running = false;
 				break;
 			}
+
+			if (event.type == SDL_MOUSEBUTTONDOWN) {
+				//TODO: Mouse events
+			}
 		}
+
 		// Framerate limiter
 		if ( (1000 / FPS) > SDL_GetTicks() - starting_tick ) {
 			SDL_Delay(1000 / FPS - (SDL_GetTicks() - starting_tick));
 		}
 
+		if (board.CheckForWinner()) running = false;
+
 		render_window.Clear();
 		render_window.RenderEntities(board);
 		render_window.Display();
 	}
-
-	render_window.CleanUp();
 	SDL_Quit();
 	return 0;
 }
