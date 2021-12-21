@@ -104,7 +104,13 @@ void Board::MovePlayerTwo(int start_idx) {
     if (idx != 0) player_turn_ = Player::kPlayer1;
 }
 
-std::ostream& operator<<(std::ostream& os, const Board& board) {
+std::ostream& operator<<(std::ostream& os, Board& board) {
+    if (board.GetPlayerTurn() == Player::kPlayer1) {
+        std::cout << "Player 1's turn" << std::endl;
+    } else {
+        std::cout << "Player 2's turn" << std::endl;
+    }
+
     std::cout << "--------------------\n";
     std::cout << "       Player2" << std::endl;
     os << "  " << "12" << " " << "11" << " " << "10" << " "  << "09" << " "  << "08" << " "  << "07" << " "  << "  " << std::endl;

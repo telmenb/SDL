@@ -1,9 +1,11 @@
 #include "render_window.hpp"
 #include "entity.hpp"
 #include "board.hpp"
+#include "mouse.hpp"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <stdio.h>
 #include <vector>
 
@@ -12,6 +14,11 @@ const int FPS = 60;
 
 //Event handler
 SDL_Event event;
+
+TTF_Font font;
+
+//Mouse object
+Mouse mouse;
 
 //Game loop flag
 bool running = true;
@@ -25,10 +32,14 @@ void Init() {
 
 	if ( !IMG_Init(IMG_INIT_PNG) )
 		printf("SDL_Image could not be initialized! SDL_Error: %s\n", SDL_GetError());
+
+	if ( TTF_Init() != 0)
+		printf("SDL_ttf could not be initialized! SDL_Error: %s\n", SDL_GetError());
 }
 
 int main( int argc, char* args[] ) {
 	Board board;
+	std::cout << board << std::endl;
 
 	Init();
 	RenderWindow render_window("Mancala", SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -45,6 +56,13 @@ int main( int argc, char* args[] ) {
 
 			if (event.type == SDL_MOUSEBUTTONDOWN) {
 				//TODO: Mouse events
+				int pocket_num = mouse.GetPocketNum(&event);
+				try {
+					board.StartMove(pocket_num);
+				} catch (const std::runtime_error& error) {
+					//Do stuff
+				}
+				std::cout << board << std::endl;
 			}
 		}
 

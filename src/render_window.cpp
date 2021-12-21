@@ -105,6 +105,8 @@ std::pair<float, float> RenderWindow::SetSrc(int stones) {
 			y = 160 * 2;
 			break;
 		case 1:
+			x = 0;
+			y = 0;
 			break;
 		case 2:
 			x = 160;
@@ -119,6 +121,7 @@ std::pair<float, float> RenderWindow::SetSrc(int stones) {
 			x = 160 * 4;
 			break;
 		case 6:
+			x = 0;
 			y = 160;
 			break;
 		case 7:

@@ -19,6 +19,8 @@ public:
     // returns board value at idx
     int AtIDX(int idx);
 
+    Player GetPlayerTurn() { return player_turn_; }
+
     // loops through the board to check if the game has ended
     // everything except board_.at(0) and board_.at(7) == 0
     bool CheckForWinner();
@@ -31,7 +33,7 @@ public:
     void Reset();
 
     // output operator for local testing
-    friend std::ostream& operator<<(std::ostream& os, const Board& board);
+    friend std::ostream& operator<<(std::ostream& os, Board& board);
 
 private:
     // creates a int vector of length 14 and initializes all values to 4
