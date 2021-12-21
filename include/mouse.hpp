@@ -9,6 +9,7 @@ class Mouse {
     public:
         Mouse();
         int GetPocketNum(SDL_Event* event);
+        
     private:
         int x_pos, y_pos;
 };

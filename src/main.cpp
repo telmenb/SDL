@@ -7,7 +7,6 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <stdio.h>
-#include <vector>
 
 //Game refresh rate
 const int FPS = 60;
@@ -40,20 +39,19 @@ int main( int argc, char* args[] ) {
 	std::cout << board << std::endl;
 
 	Init();
-	Graphics render_window("Mancala", SCREEN_WIDTH, SCREEN_HEIGHT);
+	Graphics graphics("Mancala", SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	while ( running ) {
+	while (running) {
 		starting_tick = SDL_GetTicks();
 
-		while ( SDL_PollEvent(&event) ) {
-			//Event handler
+		//Event handler
+		while (SDL_PollEvent(&event)) {
 			if (event.type == SDL_QUIT) {
 				running = false;
 				break;
 			}
 
 			if (event.type == SDL_MOUSEBUTTONDOWN) {
-				//TODO: Mouse events
 				int pocket_num = mouse.GetPocketNum(&event);
 				try {
 					board.StartMove(pocket_num);
@@ -64,17 +62,18 @@ int main( int argc, char* args[] ) {
 			}
 		}
 
-		// Framerate limiter
-		if ( (1000 / FPS) > SDL_GetTicks() - starting_tick ) {
+		//Framerate limiter
+		if ((1000 / FPS) > SDL_GetTicks() - starting_tick) {
 			SDL_Delay(1000 / FPS - (SDL_GetTicks() - starting_tick));
 		}
 
 		if (board.CheckForWinner()) running = false;
 
-		render_window.Clear();
-		render_window.RenderEntities(board);
-		render_window.RenderScore(board);
-		render_window.Display();
+		graphics.Clear();
+		graphics.RenderEntities(board);
+		graphics.RenderGameScore(board);
+		graphics.RenderGameText(board);
+		graphics.Display();
 	}
 	SDL_Quit();
 	return 0;

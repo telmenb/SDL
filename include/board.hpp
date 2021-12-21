@@ -19,6 +19,7 @@ public:
     // returns board value at idx
     int AtIDX(int idx);
 
+    // returns player_turn_
     Player GetPlayerTurn() { return player_turn_; }
 
     // loops through the board to check if the game has ended

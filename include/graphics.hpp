@@ -8,12 +8,11 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <vector>
+#include <string>
 
 //Screen dimension constants
-const int SCREEN_WIDTH = 1700;
+const int SCREEN_WIDTH = 1900;
 const int SCREEN_HEIGHT = 700;
-const int BOARD_WIDTH = 1700;
-const int BOARD_HEIGHT = 380;
 const int STONE_WIDTH = 160;
 const int STONE_HEIGHT = 160;
 
@@ -24,13 +23,15 @@ public:
 	SDL_Texture* LoadTexture(const char* file_path);
 	void Clear();
 	void RenderEntities(Board& board);
-	void RenderScore(Board& board);
-	void Render(Entity& entity);
+	void RenderGameScore(Board& board);
+	void RenderGameText(Board& board);
 	void Display();
+	
 private:
 	SDL_Window* window_;
 	SDL_Renderer* renderer_;
-	TTF_Font* font_;
+	TTF_Font* large_font_;
+	TTF_Font* small_font_;
 	SDL_Texture* stone_sprite_;
 	SDL_Texture* board_texture_;
 	std::vector<Entity> entities_;
