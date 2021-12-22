@@ -61,7 +61,7 @@ int main( int argc, char* args[] ) {
 				try {
 					board.StartMove(pocket_num);
 				} catch (const std::runtime_error& error) {
-					//Do stuff
+					//Do nothing
 				}
 				std::cout << board << std::endl;
 			}
@@ -80,7 +80,7 @@ int main( int argc, char* args[] ) {
 
 		if (board.CheckForWinner()) {
 			running = false;
-			//Do more stuff
+			if (graphics.EndScreen(&event, board)) running = true;
 		}
 	}
 	

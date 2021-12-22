@@ -3,6 +3,7 @@
 
 #include "entity.hpp"
 #include "board.hpp"
+#include "mouse.hpp"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -27,6 +28,7 @@ public:
 	void RenderGameText(Board& board);
 	void Display();
 	bool SplashScreen(SDL_Event* event);
+	bool EndScreen(SDL_Event* event, Board& board);
 	
 private:
 	SDL_Window* window_;

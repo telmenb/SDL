@@ -261,6 +261,54 @@ bool Graphics::SplashScreen(SDL_Event* event) {
 	return ready && !quit;
 }
 
+bool Graphics::EndScreen(SDL_Event* event, Board& board) {
+	std::string winner_string;
+	if (board.DeclareWinner() == Player::kPlayer1) winner_string = "Player 1 wins!";
+	else if (board.DeclareWinner() == Player::kPlayer2) winner_string = "Player 2 wins!";
+	else winner_string = "It's a Tie!";
+	board.Reset();
+
+	SDL_Surface* winner_surface = TTF_RenderText_Solid(large_font_, winner_string.c_str(), {255, 255, 255});
+	SDL_Surface* replay_surface = TTF_RenderText_Solid(small_font_, "Click anywhere to start a new game", {255, 255, 255});
+	SDL_Texture* background_texture = LoadTexture("res/background.png");
+	SDL_Texture* winner_texture = SDL_CreateTextureFromSurface(renderer_, winner_surface);
+	SDL_Texture* replay_texture = SDL_CreateTextureFromSurface(renderer_, replay_surface);
+
+	SDL_Rect rect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+	SDL_RenderCopy(renderer_, background_texture, NULL, &rect);
+
+	int w, h = 0;
+	SDL_QueryTexture(winner_texture, NULL, NULL, &w, &h);
+	rect = {(SCREEN_WIDTH - w) / 2, 280, w, h};
+	SDL_RenderCopy(renderer_, winner_texture, NULL, &rect);
+	
+	SDL_QueryTexture(replay_texture, NULL, NULL, &w, &h);
+	rect = {(SCREEN_WIDTH - w) / 2, 430, w, h};
+	SDL_RenderCopy(renderer_, replay_texture, NULL, &rect);
+
+	Display();
+	bool start, quit = false;
+	while (!start) {
+		while (SDL_PollEvent(event)) {
+			if (event->type == SDL_QUIT) {
+				start = quit = true;
+			}
+			if (event->type == SDL_MOUSEBUTTONDOWN) {
+				start = true;
+			}
+		}
+	}
+
+	SDL_FreeSurface(winner_surface);
+	SDL_FreeSurface(replay_surface);
+	SDL_DestroyTexture(background_texture);
+	SDL_DestroyTexture(winner_texture);
+	SDL_DestroyTexture(replay_texture);
+	Clear();
+
+	return start && !quit;
+}
+
 Graphics::~Graphics() {
 	SDL_DestroyTexture(stone_sprite_);
 	SDL_DestroyTexture(board_texture_);

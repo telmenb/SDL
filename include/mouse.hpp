@@ -6,12 +6,12 @@
 #include <SDL2/SDL.h>
 
 class Mouse {
-    public:
-        Mouse();
-        int GetPocketNum(SDL_Event* event);
+public:
+    Mouse();
+    int GetPocketNum(SDL_Event* event);
         
-    private:
-        int x_pos, y_pos;
+private:
+    int x_pos, y_pos;
 };
 
 
