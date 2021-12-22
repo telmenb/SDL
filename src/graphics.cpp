@@ -20,8 +20,7 @@ Graphics::Graphics(const char* title, int width, int height) {
 }
 
 SDL_Texture* Graphics::LoadTexture(const char* file_path) {
-	SDL_Texture* texture = nullptr;
-	texture = IMG_LoadTexture(renderer_, file_path);
+	SDL_Texture* texture = IMG_LoadTexture(renderer_, file_path);
 
 	if (texture == nullptr)
 		std::cout << "Error Loading Texture: " << SDL_GetError() << std::endl;
@@ -73,8 +72,8 @@ void Graphics::RenderGameScore(Board& board) {
 	} else {
 		rect = {1640, 310, w, h};
 	}
-	SDL_RenderCopy(renderer_, texture, NULL, &rect);
 
+	SDL_RenderCopy(renderer_, texture, NULL, &rect);
 	SDL_FreeSurface(surface);
 	SDL_DestroyTexture(texture);
 
@@ -89,8 +88,8 @@ void Graphics::RenderGameScore(Board& board) {
 	} else {
 		rect = {130, 310, w, h};
 	}
-	SDL_RenderCopy(renderer_, texture, NULL, &rect);
 
+	SDL_RenderCopy(renderer_, texture, NULL, &rect);
 	SDL_FreeSurface(surface);
 	SDL_DestroyTexture(texture);
 }
@@ -103,14 +102,14 @@ void Graphics::RenderGameText(Board& board) {
 	} else {
 		turn = "Player 2's turn";
 	}
+
+	int w, h = 0;
 	SDL_Surface* surface = TTF_RenderText_Solid(small_font_, turn.c_str(), {255, 255, 255});
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer_, surface);
-	int w, h = 0;
 	SDL_QueryTexture(texture, NULL, NULL, &w, &h);
 	SDL_Rect rect = {(SCREEN_WIDTH - w) / 2, 580, w, h};
-	
-	SDL_RenderCopy(renderer_, texture, NULL, &rect);
 
+	SDL_RenderCopy(renderer_, texture, NULL, &rect);
 	SDL_FreeSurface(surface);
 	SDL_DestroyTexture(texture);
 
@@ -121,7 +120,6 @@ void Graphics::RenderGameText(Board& board) {
 	rect = {(SCREEN_WIDTH - w) / 2, 50, w, h};
 	
 	SDL_RenderCopy(renderer_, texture, NULL, &rect);
-
 	SDL_FreeSurface(surface);
 	SDL_DestroyTexture(texture);
 }
@@ -241,16 +239,14 @@ bool Graphics::SplashScreen(SDL_Event* event) {
 	SDL_RenderCopy(renderer_, small_texture, NULL, &rect);
 
 	Display();
-
-	bool start = false;
-	while (!start) {
+	bool ready, quit = false;
+	while (!ready) {
 		while (SDL_PollEvent(event)) {
 			if (event->type == SDL_QUIT) {
-				return false;
+				ready = quit = true;
 			}
 			if (event->type == SDL_MOUSEBUTTONDOWN) {
-				start = true;
-				break;
+				ready = true;
 			}
 		}
 	}
@@ -260,10 +256,9 @@ bool Graphics::SplashScreen(SDL_Event* event) {
 	SDL_DestroyTexture(background_texture);
 	SDL_DestroyTexture(large_texture);
 	SDL_DestroyTexture(small_texture);
-
 	Clear();
 
-	return true;
+	return ready && !quit;
 }
 
 Graphics::~Graphics() {

@@ -80,8 +80,10 @@ int main( int argc, char* args[] ) {
 
 		if (board.CheckForWinner()) {
 			running = false;
+			//Do more stuff
 		}
 	}
+	
 	SDL_Quit();
 	return 0;
 }
