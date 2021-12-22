@@ -15,6 +15,11 @@ First time building a GUI with C++ using SDL2
 * 1.0
     * Initial Release
 
+## Dependencies
+* SDL2
+    * SDL_image
+    * SDL_ttf
+
 ## Acknowledgements
 * Gregory Lee for being an awesome and inspiring TA
 * [Lazy Foo' Productions](http://www.lazyfoo.net/tutorials/SDL/index.php)
