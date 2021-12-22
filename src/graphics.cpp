@@ -98,7 +98,6 @@ void Graphics::RenderGameScore(Board& board) {
 void Graphics::RenderGameText(Board& board) {
 	//Player turn
 	std::string turn;
-	int w, h = 0;
 	if (board.GetPlayerTurn() == Player::kPlayer1) {
 		turn = "Player 1's turn";
 	} else {
@@ -106,6 +105,7 @@ void Graphics::RenderGameText(Board& board) {
 	}
 	SDL_Surface* surface = TTF_RenderText_Solid(small_font_, turn.c_str(), {255, 255, 255});
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer_, surface);
+	int w, h = 0;
 	SDL_QueryTexture(texture, NULL, NULL, &w, &h);
 	SDL_Rect rect = {(SCREEN_WIDTH - w) / 2, 580, w, h};
 	
@@ -219,6 +219,51 @@ void Graphics::ClearEntities() {
 
 void Graphics::Display() {
 	SDL_RenderPresent(renderer_);
+}
+
+bool Graphics::SplashScreen(SDL_Event* event) {
+	SDL_Surface* large_surface = TTF_RenderText_Solid(large_font_, "Welcome to Mancala", {255, 255, 255});
+	SDL_Surface* small_surface = TTF_RenderText_Solid(small_font_, "Click anywhere to start", {255, 255, 255});
+	SDL_Texture* background_texture = LoadTexture("res/background.png");
+	SDL_Texture* large_texture = SDL_CreateTextureFromSurface(renderer_, large_surface);
+	SDL_Texture* small_texture = SDL_CreateTextureFromSurface(renderer_, small_surface);
+
+	SDL_Rect rect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+	SDL_RenderCopy(renderer_, background_texture, NULL, &rect);
+
+	int w, h = 0;
+	SDL_QueryTexture(large_texture, NULL, NULL, &w, &h);
+	rect = {(SCREEN_WIDTH - w) / 2, 280, w, h};
+	SDL_RenderCopy(renderer_, large_texture, NULL, &rect);
+	
+	SDL_QueryTexture(small_texture, NULL, NULL, &w, &h);
+	rect = {(SCREEN_WIDTH - w) / 2, 430, w, h};
+	SDL_RenderCopy(renderer_, small_texture, NULL, &rect);
+
+	Display();
+
+	bool start = false;
+	while (!start) {
+		while (SDL_PollEvent(event)) {
+			if (event->type == SDL_QUIT) {
+				return false;
+			}
+			if (event->type == SDL_MOUSEBUTTONDOWN) {
+				start = true;
+				break;
+			}
+		}
+	}
+
+	SDL_FreeSurface(large_surface);
+	SDL_FreeSurface(small_surface);
+	SDL_DestroyTexture(background_texture);
+	SDL_DestroyTexture(large_texture);
+	SDL_DestroyTexture(small_texture);
+
+	Clear();
+
+	return true;
 }
 
 Graphics::~Graphics() {

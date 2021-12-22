@@ -26,6 +26,7 @@ public:
 	void RenderGameScore(Board& board);
 	void RenderGameText(Board& board);
 	void Display();
+	bool SplashScreen(SDL_Event* event);
 	
 private:
 	SDL_Window* window_;

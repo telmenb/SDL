@@ -41,6 +41,11 @@ int main( int argc, char* args[] ) {
 	Init();
 	Graphics graphics("Mancala", SCREEN_WIDTH, SCREEN_HEIGHT);
 
+	if (!graphics.SplashScreen(&event)) {
+		SDL_Quit();
+		return 0;
+	}
+	
 	while (running) {
 		starting_tick = SDL_GetTicks();
 
@@ -67,13 +72,15 @@ int main( int argc, char* args[] ) {
 			SDL_Delay(1000 / FPS - (SDL_GetTicks() - starting_tick));
 		}
 
-		if (board.CheckForWinner()) running = false;
-
 		graphics.Clear();
 		graphics.RenderEntities(board);
 		graphics.RenderGameScore(board);
 		graphics.RenderGameText(board);
 		graphics.Display();
+
+		if (board.CheckForWinner()) {
+			running = false;
+		}
 	}
 	SDL_Quit();
 	return 0;
