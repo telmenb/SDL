@@ -24,7 +24,7 @@ First time building a GUI with C++ using SDL2
     * SDL_ttf
 
 ## Acknowledgements
-* Gregory Lee for being an awesome and inspiring TA
+* Greg Lee for being an awesome and inspiring TA
 * [Lazy Foo' Productions](http://www.lazyfoo.net/tutorials/SDL/index.php)
 * [codergopher](https://www.youtube.com/playlist?list=PL2RPjWnJduNmXHRYwdtublIPdlqocBoLS)
 * [John Hammond](https://www.youtube.com/playlist?list=PL1H1sBF1VAKXMz8kETLHRo1LwnvB08Q2J)
