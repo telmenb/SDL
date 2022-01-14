@@ -1,8 +1,11 @@
+<img src="res/sample_title.png" alt="Text displaying 'Welcome to Mancala'"><br>
 # Mancala
 First time building a GUI with C++ using SDL2
 
 ## Description
 * A classic game, Mancala is played with 2 players on a board with 12 pits, each of which starts with 4 stones, and 2 Mancalas. The object of the game is to get the most stones into your mancala. 
+
+<br><img src="res/sample_game_2.png" alt="Sample game of Mancala"><br>
 
 ## Instructions
 * Copy the repository onto your local machine and run `bin/exec` in the terminal to play the latest version.
