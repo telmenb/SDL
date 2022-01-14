@@ -1,4 +1,4 @@
-<img src="res/sample_title.png" alt="Text displaying 'Welcome to Mancala'"><br>
+<br><img src="res/sample_title.png" alt="Text displaying 'Welcome to Mancala'"><br>
 # Mancala
 First time building a GUI with C++ using SDL2
 
